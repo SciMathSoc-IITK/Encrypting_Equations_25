@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
 //Declaring Functions
 string Normalize(string);
 int String_Compare(string, string);
@@ -13,6 +14,8 @@ string String_GCD(string, string);
 string String_Modulo_Inverse(string, string);
 string affine_encryption(string,string,string,string);
 string affine_decryption(string,string,string,string);
+
+
 
 //Function for making the number usable, removing leading zeros.
 string Normalize(string s) {
@@ -68,6 +71,7 @@ int String_Compare(string s1, string s2) {
     if (s1 < s2) return -1;
     return 0;
 }
+
 
 
 //Function for subtracting the strings.
@@ -169,13 +173,14 @@ string String_Addition(string s1, string s2) {
 }
 
 
+
 //Function of multipying the strings.
 string String_Multiplication(string s1, string s2) {
     //Making the numbers useful.
     s1 = Normalize(s1);
     s2 = Normalize(s2);
     
-    //If ither one is zero product will be zero.
+    //If either one is zero product will be zero.
     if (s1 == "0" || s2 == "0") return "0";
     
     //Checking sign of the numbers
@@ -270,6 +275,7 @@ string String_Divide(string dividend, string divisor) {
 }
 
 
+
 //Function for calculating the modulus residue of s1 with respect to s2, which is usually represented as s1%s2.
 string String_Modulo(string dividend, string divisor) {
     dividend = Normalize(dividend);
@@ -305,6 +311,7 @@ string String_Modulo(string dividend, string divisor) {
 }
 
 
+
 //Function for finding GCD of the strings
 string String_GCD(string s1, string s2) {
 
@@ -312,6 +319,8 @@ string String_GCD(string s1, string s2) {
     if (Normalize(s2) == "0") return Normalize(s1);
     return String_GCD(s2, String_Modulo(s1, s2));
 }
+
+
 
 //Function returning the coeffeciets of the Bezout's Lemma. (ax + by = GCD(a,b))
 pair<string, pair<string, string>> String_Extended_GCD(string a, string b) {
@@ -325,7 +334,7 @@ pair<string, pair<string, string>> String_Extended_GCD(string a, string b) {
     string old_s = "1", s = "0";
     string old_t = "0", t = "1";
     
-    //Using the common Bezout's recursive relation to solve the problm iteratively.
+    //Using the common Bezout's recursive relation to solve the problem iteratively.
     while (r != "0") {
         string quotient = String_Divide(old_r, r);
         
@@ -344,6 +353,8 @@ pair<string, pair<string, string>> String_Extended_GCD(string a, string b) {
     
     return make_pair(old_r, make_pair(old_s, old_t));
 }
+
+
 
 // Calculating the multiplicative inverse of a number in the set of all modular residues of another number.
 string String_Modulo_Inverse(string a, string mod) {
@@ -389,6 +400,7 @@ string Convert_To_Int(string s) {
 }
 
 
+
 //Function to retrive the message from an integer (which is stored as an string.)
 string Convert_To_String(string s) {
     string result = "";
@@ -398,59 +410,152 @@ string Convert_To_String(string s) {
     }
     return result;
 }
-string affine_encryption( string s, string a, string b, string m){
-    string encrypted="";
-    for(char c:s){
-    string x= to_string(c-'A');
-    string ax = String_Multiplication(a,x ); // compute a*x
-    string ax_plus_b = String_Addition(ax,b); // find a*x +b
-    string y= String_Modulo(ax_plus_b,m); // compute (ax+b) (mod m)
-    int val= stoi(String_Modulo(y,m));
-     encrypted += char(val+'A'); 
-    }
-    return encrypted;
-    
-}
 
 
-string affine_decryption(string s, string a, string b, string m) {
-    string decrypted = "";
-    for (char c : s) {
-        string y = to_string(c - 'A');
-        string y_minus_b = String_Subtraction(y, b);
-        
-        // Ensure y_minus_b is non-negative by adding m if needed
-        if (String_Compare(y_minus_b, "0") < 0) {
-            y_minus_b = String_Addition(y_minus_b, m);
+// Function for encrypting the text in Affine Cipher
+string Affine_Encrypt( string message, pair <string , string> Key, string m){
+
+            //Inititializing variables
+            string cypher="";
+
+            //Key
+            string a = Key.first;
+            string b = Key.second;
+
+            for( char c : message ){
+
+                //Encrypting each character differently
+                string x= to_string(c-'A');
+
+                //Calculating a*x
+                string ax = String_Multiplication(a,x );
+
+                //Calculating a*x+b
+                string ax_plus_b = String_Addition(ax,b);
+
+                //taking mod m
+                string y= String_Modulo(ax_plus_b,m);
+                int val= stoi(String_Modulo(y,m));
+
+                 cypher += char(val+'A'); 
+            }
+            return cypher;
+            
         }
-        
-        string a_inv = String_Modulo_Inverse(a, m);
-        string D_y = String_Multiplication(a_inv, y_minus_b);
-        string D_y_mod_m = String_Modulo(D_y, m);
-        
-        int val = stoi(D_y_mod_m);
-        decrypted += char(val + 'A');
+
+
+
+
+
+//Funciton for generation of a and b for the Affine cypher
+    pair <string,string> Affine_Key_Generation(string m){
+
+        //Finding a
+        string a;
+
+        while(true){
+
+            srand(time(0));
+            int A = rand();
+            a = to_string(A);
+            a = String_Modulo(a,m);
+
+            //a and m must be coprime
+            if(String_GCD(a,m) == "1") break;
+        }
+
+
+
+        //Finding b
+        srand(time(0));
+        int B = rand();
+        string b = to_string(B);
+        b = String_Modulo(b,m);
+
+
+
+        return make_pair(a,b);
+
     }
-    return decrypted;
-}
 
+
+
+    //Function for decyrption in Affine Cypher
+    string Affine_Decrypt(string cypher, pair <string,string> key, string m) {
+
+        //Initializing variables
+        string message = "";
+
+        //Key
+        string a = key.first;
+        string b = key.second;
+
+
+        for (char c : cypher) {
+
+            //Decrypting each character indivisually
+            string y = to_string(c - 'A');
+
+            // Calculating y-b
+            string y_minus_b = String_Subtraction(y, b);
+            
+            
+            if (String_Compare(y_minus_b, "0") < 0) {
+                y_minus_b = String_Addition(y_minus_b, m);
+            }
+            
+            //Using stardard formula
+            string a_inv = String_Modulo_Inverse(a, m);
+            string D_y = String_Multiplication(a_inv, y_minus_b);
+            string D_y_mod_m = String_Modulo(D_y, m);
+            
+            int val = stoi(D_y_mod_m);
+            message += char(val + 'A');
+        }
+
+        return message;
+
+    }
+
+
+
+// Main 
 int main(){
-    string x ,a="23",b="5",m="26";
-    cout<<"Please enter a message (Please use uppercase letters only)"<<endl;
-    getline(cin, x);
-bool allUpper = all_of(x.begin(), x.end(), [](char c) { return isupper(c); }); // CHECK for Upperacse letters only
+    string x ,m="26";
 
+    // Randomly genetrating key using our key generator function
+    pair<string,  string> key =Affine_Key_Generation(m);
+    // Defining a and b
+    string a=key.first,b=key.second; 
+    
+    cout<<"Please enter a message (Please use uppercase letters only)"<<endl;
+
+    // Getting user input
+    getline(cin, x);
+
+
+// Check for Upperacse letters only
+bool allUpper = all_of(x.begin(), x.end(), [](char c) { return isupper(c); }); 
+
+
+// If all letters are not in upper case then user is dragged into a loop, which cannot be broken till user enters text in Uppercase
 while (!allUpper) {
     cout << "Please use only uppercase letters" << endl;
      getline(cin, x);
       allUpper = all_of(x.begin(), x.end(), [](char c) { return isupper(c); });
 }
 
-    string encrypted= affine_encryption(x,a,b,m);
+
+    // Encryption
+    string encrypted= Affine_Encrypt(x,key,m);
     cout<<"Encrypted text:"<< encrypted<<endl;
+
+
+    // Decryption
     string gcd=String_GCD(a,m); 
-    if (gcd == "1" ){ // For decryption to work a and m must be coprime so that we can find an inverse of a
-        string decrypted= affine_decryption(encrypted,a,b,m);
+
+    // For decryption to work a and m must be coprime so that we can find an inverse of a
+    if (gcd == "1" ){         string decrypted= Affine_Decrypt(encrypted,key,m);
         cout<<"Decrypted text:"<< decrypted<<endl;
     }
 
