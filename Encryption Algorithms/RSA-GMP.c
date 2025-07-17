@@ -38,7 +38,7 @@ int main(){
 
     }
 
-    gmp_printf("p = %Zd\nq = %Zd\n",p , q);
+    gmp_printf("p = %Zx\nq = %Zx\n",p , q);
 
 
 
@@ -58,7 +58,7 @@ int main(){
     mpz_sub_ui(q_1, q, 1);
 
     mpz_mul(p_n, p_1, q_1);
-    gmp_printf("\nphi(n) is given by: %Zd\n", p_n);
+    gmp_printf("\nphi(n) is given by: %Zx\n", p_n);
 
     mpz_t gcd;
     mpz_init(gcd);
@@ -72,7 +72,7 @@ int main(){
         mpz_gcd(gcd, e, p_n);
     }
     gmp_printf("e is equal to: %Zd\n", e);
-    gmp_printf("gcd of phi(n) and e is equal to: %Zd\n", gcd);
+    gmp_printf("gcd of phi(n) and e is equal to: %Zx\n", gcd);
 
     mpz_invert(d, e, p_n);
 
@@ -121,7 +121,7 @@ int main(){
     
     mpz_powm(enc_msg, msg, e, n);
 
-    gmp_printf("\nyour encrypted message is: %Zd\n", enc_msg);
+    gmp_printf("\nyour encrypted message is: %Zx\n", enc_msg);
 
     mpz_t dec_msg;
     mpz_init(dec_msg);
