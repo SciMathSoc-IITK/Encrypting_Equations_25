@@ -1,6 +1,6 @@
 # ENCRYPTION ALGORITHMS FOLDER
 **Note that the encryption algorithms are skeletal, and the code shall be modified to meet your requirements.**
-## please use the following commands to run the files(for linux terminal):
+## Please use the following commands to run the files(for linux terminal):
 **Note that you need to install gmp library and openssl rand library to run the following files**
 1. RSA-GMP.c: "RSA-GMP.c -o rsa -lgmp && ./rsa"
 2. ecc_rational_addition.c: "ecc_rational_addition.c -o ecc_rat -lgmp && ./ecc_rat"
