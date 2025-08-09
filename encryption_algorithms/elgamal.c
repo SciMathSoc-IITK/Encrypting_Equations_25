@@ -323,6 +323,7 @@ generate_random_mpz(priv_key, prime);
 
 gmp_printf("Your private key is given by: %Zx\n", priv_key);
 
+printf("Please note that we are printing the private key here only for presentation.\nIn a real application, you would never print or expose your private keys.\n\n");
 struct point g;
 mpz_inits(g.x, g.y, NULL);
 
@@ -342,7 +343,7 @@ mpz_inits(x, y, msg, count, NULL);
 mpz_set_d(x, 3);
 mpz_set_d(y, 47926);
 mpz_set_d(count, 0);
-gmp_printf("\n Please enter your message to encrypt: ");
+gmp_printf("\n Please enter your message to encrypt(make sure your message is a number and is less than 524287): ");
 gmp_scanf("%Zd", &msg);
 
 struct point message, c1, c2;
