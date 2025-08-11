@@ -307,9 +307,9 @@ int main() {
     generate_secure_mpz(priv_key_a, 256); 
     generate_secure_mpz(priv_key_b, 256); // generate a 256-bit random number
 
-    gmp_printf("Private keys: %Zx, %Zx\n", priv_key_a, priv_key_b);  // print in hex
+    gmp_printf("Your Private keys are: %Zx, %Zx\n", priv_key_a, priv_key_b);  // print in hex
 
-    printf("\nNote that we are printing the private keys here only for presentation.\n");
+    printf("\nThe private keys are 256-bit Randomly generated numbers. \nNote that we are printing the private keys here only for presentation.\nIn a real application, you would never print or expose your private keys.\n\n");
 
     //curve parameters:
     mpz_t a, b, m;
@@ -339,9 +339,9 @@ int main() {
     gmp_printf("the value of the points abg and bag is: abg = (%Zx, %Zx), bag = (%Zx, %Zx)\n", abg.x, abg.y, bag.x, bag.y);
     if (mpz_cmp(abg.x, bag.x) == 0 && mpz_cmp(abg.y, bag.y) == 0)
     {
-        printf("Success: abg == bag, shared secret matches\n");
+        printf("Success: a*b*g == b*a*g, shared secret matches\n");
     }else {
-        printf("Error: abg != bag, something went wrong\n");
+        printf("Error: a*b*g != b*a*g, something went wrong\n");
     }
     mpz_clears(priv_key_a, priv_key_b, a, b, m, g.x, g.y, ag.x, ag.y, abg.x, abg.y, bag.x, bag.y, NULL);
     
